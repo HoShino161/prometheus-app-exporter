@@ -1,0 +1,13 @@
+# 只忽略 Python 产物，别把 grafana/deploy 里的配置文件也忽略掉
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+# 实验跑出来的本地数据（不进仓库，但跑的时候会生成）
+experiments/out/
+# 本地调试的临时输出
+.tmpout/
