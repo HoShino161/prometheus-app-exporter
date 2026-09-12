@@ -30,7 +30,7 @@ services:
     volumes:
       - ./deploy/docker/grafana/datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
       - ./deploy/docker/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/app.yml:ro
-      - ./grafana/dashboard-ai-app-monitoring.json:/var/lib/grafana/dashboards/app-exporter.json:ro
+      - ./grafana/dashboard-app-monitoring.json:/var/lib/grafana/dashboards/app-exporter.json:ro
     environment:
       # 本机演示用，免登录直接进（匿名给 Admin）
       GF_AUTH_ANONYMOUS_ENABLED: "true"

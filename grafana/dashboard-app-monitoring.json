@@ -30,7 +30,7 @@
       },
       "id": 100,
       "panels": [],
-      "title": "可用性（先看这块：服务到底活着没有）",
+      "title": "可用性",
       "type": "row"
     },
     {
@@ -266,7 +266,7 @@
       },
       "id": 101,
       "panels": [],
-      "title": "业务指标（队列 / 延迟）",
+      "title": "业务指标",
       "type": "row"
     },
     {
@@ -443,7 +443,7 @@
       },
       "id": 102,
       "panels": [],
-      "title": "exporter 健康（监控的监控）",
+      "title": "exporter 健康",
       "type": "row"
     },
     {
@@ -662,8 +662,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "AI 应用服务监控（自研 exporter）",
-  "uid": "opslab-app-exporter",
+  "title": "应用服务监控",
+  "uid": "app-exporter",
   "version": 1,
   "weekStart": ""
 }
