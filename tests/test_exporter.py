@@ -232,3 +232,24 @@ def test_cli_overrides_env(monkeypatch):
     monkeypatch.setenv("APP_EXPORTER_PORT", "9999")
     cfg = ex.Config(port=1234)
     assert cfg.port == 1234
+
+
+# --------------------------------------------------------------------------
+# 5. 序列初始化
+# --------------------------------------------------------------------------
+
+def test_init_series_exposes_zero_counters():
+    """计数器一直是 0 的时候也得有序列。
+
+    这个 bug 是跑起来才发现的：采集从来没失败过，
+    app_exporter_scrape_errors_total 一条序列都没有，Grafana 面板上
+    显示成 No data，看着像面板坏了。
+    """
+    from prometheus_client import generate_latest
+
+    ex.init_series(ex.Config(host_label="app1", probe_path="/"))
+    text = generate_latest().decode()
+
+    assert 'app_exporter_scrape_errors_total{host="app1"}' in text
+    assert 'app_up{host="app1"}' in text
+    assert 'app_request_duration_seconds_count{endpoint="/",host="app1"}' in text

@@ -53,6 +53,18 @@ SCRAPE_DURATION = Histogram(
 _upstream_baseline = {}
 
 
+def init_series(cfg):
+    """启动时先把要暴露的序列建出来。
+
+    prometheus_client 是惰性的：带标签的指标在第一次 .labels() 之前，
+    /metrics 里一条样本都没有。计数器一直是 0 的时候最明显——
+    面板上直接显示 No data，看着像面板坏了，其实只是没序列。
+    """
+    for metric in (APP_QUEUE_DEPTH, APP_REQUESTS, APP_UP, SCRAPE_ERRORS):
+        metric.labels(host=cfg.host_label)
+    APP_REQUEST_DURATION.labels(host=cfg.host_label, endpoint=cfg.probe_path)
+
+
 def forward_counter(counter, host, upstream_value):
     """把上游的累计值换算成增量再写进本地 Counter，返回这次加了多少。
 
@@ -179,6 +191,7 @@ def main(argv=None):
 
     # 先把端口起起来再进采集循环，不然 Prometheus 第一次抓会连接被拒，
     # 在 up 上留下一个假的 0
+    init_series(cfg)
     start_http_server(cfg.port)
     logging.info("监听 :%d/metrics，采集 %s，间隔 %.1fs", cfg.port, cfg.stats_url, cfg.interval)
 
