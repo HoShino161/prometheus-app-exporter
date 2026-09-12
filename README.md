@@ -56,6 +56,10 @@ docker compose up -d
 
 关掉：`docker compose down`
 
+面板长这样（跑起来截的，不是画的）：
+
+![dashboard](docs/dashboard.png)
+
 ## 指标
 
 | 指标 | 类型 | 标签 | 说明 |
