@@ -1,0 +1,41 @@
+services:
+  # 假装是个业务应用，被采的对象
+  app:
+    build: .
+    command: python examples/mock_app.py --port 8000
+    ports:
+      - "8000:8000"
+
+  exporter:
+    build: .
+    command: >
+      python app_exporter.py
+      --host-label app1
+      --stats-url http://app:8000/api/stats
+      --probe-base http://app:8000
+    ports:
+      - "9877:9877"
+    depends_on:
+      - app
+
+  prometheus:
+    image: prom/prometheus:v2.53.1
+    volumes:
+      - ./deploy/docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    volumes:
+      - ./deploy/docker/grafana/datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ./deploy/docker/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/app.yml:ro
+      - ./grafana/dashboard-ai-app-monitoring.json:/var/lib/grafana/dashboards/app-exporter.json:ro
+    environment:
+      # 本机演示用，免登录直接进（匿名给 Admin）
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
