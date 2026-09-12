@@ -1,0 +1,10 @@
+global:
+  # 演示用，抓密一点出图快；生产上 15s 就够
+  scrape_interval: 5s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: app
+    static_configs:
+      - targets:
+          - exporter:9877
