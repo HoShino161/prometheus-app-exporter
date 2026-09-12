@@ -1,0 +1,22 @@
+[Unit]
+Description=app_exporter - Prometheus exporter for the Flask app
+Documentation=https://github.com/HoShino161/prometheus-app-exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# 监控组件不该用 root 跑：它只需要读 /metrics，出了漏洞也不该拿到整机权限
+User=exporter
+Group=exporter
+EnvironmentFile=/etc/app-exporter.env
+ExecStart=/usr/bin/python3 /opt/app-exporter/app_exporter.py
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+# 兜底：exporter 自己内存泄漏不能把被监控的机器拖死。128M 对两个纯 Python 依赖绰绰有余
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target
